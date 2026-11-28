@@ -29,6 +29,12 @@ pub struct Metrics {
     pub calls: u64,
     pub worker_calls: u64,
     pub compute_calls: u64,
+    pub stream_calls: u64,
+    pub stream_native_steps: u64,
+    pub stream_learns: u64,
+    pub stream_cache_misses: u64,
+    pub stream_native_operations: [u64; 5],
+    pub stream_learn_operations: [u64; 5],
     pub compute_operations: [u64; crate::compute::FUNCTION_COUNT as usize],
     pub compute_fallbacks: [u64; crate::compute::FUNCTION_COUNT as usize],
     pub glibc_calls: u64,
@@ -80,6 +86,24 @@ impl Metrics {
     /// Worker-local counters join here after every view user has stopped.
     pub fn merge(&mut self, other: Self) {
         self.compute_calls += other.compute_calls;
+        self.stream_calls += other.stream_calls;
+        self.stream_native_steps += other.stream_native_steps;
+        self.stream_learns += other.stream_learns;
+        self.stream_cache_misses += other.stream_cache_misses;
+        for (a, b) in self
+            .stream_native_operations
+            .iter_mut()
+            .zip(other.stream_native_operations)
+        {
+            *a += b;
+        }
+        for (a, b) in self
+            .stream_learn_operations
+            .iter_mut()
+            .zip(other.stream_learn_operations)
+        {
+            *a += b;
+        }
         for (a, b) in self
             .compute_operations
             .iter_mut()
@@ -247,16 +271,24 @@ const VALIDATION_SLOTS: usize = 64;
 pub struct Registry {
     pub metrics: Metrics,
     checked: [Option<CheckedStub>; VALIDATION_SLOTS],
+    streams: crate::streams::Shared,
 }
 impl Default for Registry {
     fn default() -> Self {
         Self {
             metrics: Metrics::default(),
             checked: [None; VALIDATION_SLOTS],
+            streams: crate::streams::Shared::default(),
         }
     }
 }
 impl Registry {
+    pub fn with_stream_cache(streams: crate::streams::Shared) -> Self {
+        Self {
+            streams,
+            ..Self::default()
+        }
+    }
     /// Recheck executable page permissions, identity, code revision and live
     /// backing version on every entry. Only identical page tokens can reuse the
     /// exact five-word check; no host pointers or borrows are cached.
@@ -274,6 +306,7 @@ impl Registry {
                 && (1..=crate::glibc::FUNCTION_COUNT).contains(&function))
             || (module == crate::compute::PROFILE
                 && (1..=crate::compute::FUNCTION_COUNT).contains(&function))
+            || (module == crate::streams::PROFILE && function == crate::streams::FUNCTION)
             || (module == crate::callbacks::PROFILE && function == 1)
             || (module == crate::numeric::PROFILE && function == 1)
             || (module == crate::integer::PROFILE && function == 1)
@@ -418,6 +451,9 @@ impl Registry {
             self.metrics.compute_calls += 1;
             self.metrics.compute_operations[function as usize - 1] += 1;
             crate::compute::execute(memory, function, a, &mut self.metrics)
+        } else if module == crate::streams::PROFILE {
+            self.metrics.stream_calls += 1;
+            crate::streams::execute(&self.streams, memory, a, &mut self.metrics)
         } else if module == crate::callbacks::PROFILE {
             self.metrics.callback_calls = self.metrics.callback_calls.saturating_add(1);
             crate::callbacks::step(memory, a, &mut self.metrics)

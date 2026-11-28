@@ -2,7 +2,10 @@
 //! Reversible cold AArch64 ELF adapters. Original algorithms and entry words
 //! remain available; unsupported ELF layouts are retained byte for byte.
 use sha2::{Digest, Sha256};
-const MARKER: &[u8; 8] = b"TRMCMP01";
+const MARKER: &[u8; 8] = b"TRMCMP02";
+const LEGACY: &[u8; 8] = b"TRMCMP01";
+const STREAM: u32 = 1 << 31;
+const WRAPPER_BYTES: usize = 512;
 const NAMES: &[(&[u8], u32)] = &[
     (b"crc32", 1),
     (b"adler32", 2),
@@ -115,7 +118,23 @@ fn words(
         0xf9402be9, 0xd51b4209, 0xa94007e0, 0xa9410fe2, 0xa94217e4, 0xa9431fe6, 0xf94027fe,
         0x910183ff,
     ]);
-    let relocated_at = at + w.len() as u64 * 4;
+    w.extend(displaced(at + w.len() as u64 * 4, target, original)?);
+    let stub = w.len();
+    w.extend([
+        0xd2800170,
+        0xf2a00030,
+        0xd2800011 | (function << 5),
+        crate::native::INSTRUCTION,
+        0xd65f03c0,
+    ]);
+    w[mismatch] = 0x54000001 | (((fallback - mismatch) as u32) << 5);
+    w[call] = branch(at + call as u64 * 4, at + stub as u64 * 4, true)?;
+    w[failed] = 0xb5000001 | (((fallback - failed) as u32) << 5);
+    Some(w.into_iter().flat_map(u32::to_le_bytes).collect())
+}
+fn displaced(at: u64, target: u64, original: u32) -> Option<Vec<u32>> {
+    let mut w = Vec::new();
+    let relocated_at = at;
     let mut guard_branch = None;
     let relocated = if original & 0x1f000000 == 0x10000000 {
         let bits = ((original >> 5) & 0x7ffff) << 2 | ((original >> 29) & 3);
@@ -161,22 +180,120 @@ fn words(
     };
     w.push(relocated);
     w.push(guard_branch.unwrap_or(0xd503201f));
-    let from = at + w.len() as u64 * 4;
+    let from = relocated_at + w.len() as u64 * 4;
     w.push(branch(from, target + 4, false)?);
+    Some(w)
+}
+fn stream_words(
+    at: u64,
+    target: u64,
+    original: u32,
+    operation: u32,
+    got: u64,
+    auth: u32,
+) -> Option<Vec<u8>> {
+    let operation = operation & !STREAM;
+    let mut w = vec![
+        0xd101c3ff,
+        0xa90007e0,
+        0xa9010fe2,
+        0xa90217e4,
+        0xa9031fe6,
+        0xd2800009 | ((operation & 65535) << 5),
+        0xf2a00009 | ((operation >> 16) << 5),
+        0xf90023e9,
+        0xf90027fe,
+        0xd53b4209,
+        0xf9002be9,
+    ];
+    let cache = got + 20;
+    let pc = at + w.len() as u64 * 4;
+    w.push(adrp(pc, cache)?);
+    w.push(0xb940020a | ((((cache & 4095) / 4) as u32) << 10));
+    w.push(0x7100095f);
+    let disabled_branch = w.len();
+    w.push(0);
+    w.extend([0x910003e0, 0xaa1f03e1, 0xaa1f03e2]);
+    let pre = w.len();
+    w.push(0);
+    let fallback_branch = w.len();
+    w.push(0);
+    w.extend([0xf94027fe, 0x9101c3ff, auth, 0xd65f03c0]);
+    let fallback = w.len();
+    w.extend([
+        0xf9402be9, 0xd51b4209, 0xa94007e0, 0xa9410fe2, 0xa94217e4, 0xa9431fe6,
+    ]);
+    let original_call = w.len();
+    w.push(0);
+    w.extend([0xaa0003e2, 0xd2800021, 0x910003e0]);
+    let post = w.len();
+    w.push(0);
+    w.extend([0xf94027fe, 0x9101c3ff, auth, 0xd65f03c0]);
+    let disabled = w.len();
+    w.extend([
+        0xf9402be9, 0xd51b4209, 0xa94007e0, 0xa9410fe2, 0xa94217e4, 0xa9431fe6, 0xf94027fe,
+        0x9101c3ff,
+    ]);
+    let tail = w.len();
+    w.push(0);
+    let signed_call = w.len();
+    // A nested call into a PAC-protected original body needs its own signed
+    // link at the wrapper's SP. Disabled tail execution keeps the caller link.
+    w.push(match auth {
+        0xd50323bf => 0xd503233f,
+        0xd50323ff => 0xd503237f,
+        _ => 0xd503201f,
+    });
+    let body = w.len();
+    w.extend(displaced(at + body as u64 * 4, target, original)?);
     let stub = w.len();
     w.extend([
-        0xd2800170,
+        0xd2800190,
         0xf2a00030,
-        0xd2800011 | (function << 5),
+        0xd2800031,
         crate::native::INSTRUCTION,
         0xd65f03c0,
     ]);
-    w[mismatch] = 0x54000001 | (((fallback - mismatch) as u32) << 5);
-    w[call] = branch(at + call as u64 * 4, at + stub as u64 * 4, true)?;
-    w[failed] = 0xb5000001 | (((fallback - failed) as u32) << 5);
+    for call in [pre, post] {
+        w[call] = branch(at + call as u64 * 4, at + stub as u64 * 4, true)?;
+    }
+    w[original_call] = branch(
+        at + original_call as u64 * 4,
+        at + signed_call as u64 * 4,
+        true,
+    )?;
+    w[tail] = branch(at + tail as u64 * 4, at + body as u64 * 4, false)?;
+    w[disabled_branch] = 0x54000001 | (((disabled - disabled_branch) as u32) << 5);
+    w[fallback_branch] = 0xb5000001 | (((fallback - fallback_branch) as u32) << 5);
     Some(w.into_iter().flat_map(u32::to_le_bytes).collect())
 }
-fn initializer(at: u64, got: u64, original: Option<(u64, usize)>) -> Option<Vec<u8>> {
+fn wrapper(
+    at: u64,
+    target: u64,
+    original: u32,
+    function: u32,
+    got: u64,
+    auth: u32,
+) -> Option<Vec<u8>> {
+    let mut bytes = if function & STREAM != 0 {
+        stream_words(at, target, original, function, got, auth)?
+    } else {
+        words(at, target, original, function, got, auth)?
+    };
+    if bytes.len() > WRAPPER_BYTES {
+        return None;
+    }
+    while bytes.len() < WRAPPER_BYTES {
+        bytes.extend(0xd503201fu32.to_le_bytes());
+    }
+    Some(bytes)
+}
+fn initializer(
+    at: u64,
+    got: u64,
+    original: Option<(u64, usize)>,
+    trace_slots: &[u64],
+) -> Option<Vec<u8>> {
     let mut w = vec![
         0xd503245f, 0xd10183ff, 0xa90007e0, 0xa9010fe2, 0xa90217e4, 0xa9031fe6, 0xf90027fe,
     ];
@@ -196,14 +313,38 @@ fn initializer(at: u64, got: u64, original: Option<(u64, usize)>) -> Option<Vec<
             w.push(0xf2a00000 | (((key >> 16) & 0xffff) << 5));
         }
     }
-    w.extend([
-        0xf9402be9, 0xb9405bea, 0xb900012a, 0xd2800169, 0xf2a00029, 0xeb09001f, 0x1a9f17ea,
-        0x1100054a,
-    ]);
+    w.extend([0xd2800169, 0xf2a00029, 0xeb09001f, 0x1a9f17ea, 0x1100054a]);
     let cache = got + 16;
     let pc = at + w.len() as u64 * 4;
     w.push(adrp(pc, cache)?);
     w.push(0xb900020a | ((((cache & 4095) / 4) as u32) << 10));
+    let key = crate::streams::AUXV_KEY as u32;
+    w.extend([
+        0xd2800000 | ((key & 65535) << 5),
+        0xf2a00000 | ((key >> 16) << 5),
+    ]);
+    let pc = at + w.len() as u64 * 4;
+    w.push(adrp(pc, got)?);
+    w.push(0xf9400210 | ((((got & 4095) / 8) as u32) << 10));
+    w.push(0xd63f0200);
+    w.extend([0xd2800189, 0xf2a00029, 0xeb09001f, 0x1a9f17ea, 0x1100054a]);
+    // Registered guest trace callbacks must run even when they return a zero
+    // trace context. Disable both compute and stream shortcuts for this image.
+    for slot in trace_slots {
+        let pc = at + w.len() as u64 * 4;
+        w.push(adrp(pc, *slot)?);
+        w.push(0xf940020b | ((((slot & 4095) / 8) as u32) << 10));
+        w.extend([0xb400008b, 0x5280002a]);
+        let cache = got + 16;
+        let pc = at + w.len() as u64 * 4;
+        w.push(adrp(pc, cache)?);
+        w.push(0xb900020a | ((((cache & 4095) / 4) as u32) << 10));
+    }
+    let cache = got + 20;
+    let pc = at + w.len() as u64 * 4;
+    w.push(adrp(pc, cache)?);
+    w.push(0xb900020a | ((((cache & 4095) / 4) as u32) << 10));
+    w.extend([0xf9402be9, 0xb9405bea, 0xb900012a]);
     if let Some((base, count)) = original {
         for index in 0..count {
             w.extend([0xa94007e0, 0xa9410fe2, 0xa94217e4, 0xa9431fe6]);
@@ -220,7 +361,7 @@ fn initializer(at: u64, got: u64, original: Option<(u64, usize)>) -> Option<Vec<
     Some(w.into_iter().flat_map(u32::to_le_bytes).collect())
 }
 fn restored(bytes: &[u8]) -> Option<Vec<u8>> {
-    if !bytes.ends_with(MARKER) {
+    if !bytes.ends_with(MARKER) && !bytes.ends_with(LEGACY) {
         return None;
     }
     let size = u64at(bytes, bytes.len().checked_sub(16)?)? as usize;
@@ -254,6 +395,14 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
     if bytes.ends_with(MARKER) {
         return if enabled { None } else { restored(bytes) };
     }
+    if bytes.ends_with(LEGACY) {
+        let original = restored(bytes)?;
+        return if enabled {
+            adapt(&original, true)
+        } else {
+            Some(original)
+        };
+    }
     if !enabled
         || bytes.len() > 64 * 1024 * 1024
         || bytes.get(..6)? != b"\x7fELF\x02\x01"
@@ -263,6 +412,15 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
         return None;
     }
     let digest = format!("{:x}", Sha256::digest(bytes));
+    let abi = match digest.as_str() {
+        "1dfd2166dd6124fbd4cbba54ea3d5b2de60e308c252de39d1369e71d301ddea4" => 1,
+        "6fe00acadf8119ff245855e5dcc7f26c6c0ffaf4bfa2baa88feab58f23727d65" => 2,
+        "0261e625d796007a4688f12b5bea20ca8af9d6767d645286501245a0f0187699" => 3,
+        "1279c4edfbfb08878b5b7fb40d392c1bdc9b30100d9b7a019d4aefaf10d2046c" => 5,
+        "684bf2cbc78ba9e8956818b02a07cc0c1f6ef1738bb0d6b2bf59a72d5aff0b94" => 4,
+        "abc92a2b9322d612f7a7f418b25965361098d0a534c5527fc692f2f0c33d0f9f" => 6,
+        _ => 0,
+    };
     if !include_str!("compute-catalog.tsv")
         .lines()
         .any(|line| line.split_whitespace().next() == Some(digest.as_str()))
@@ -342,7 +500,20 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
             .get(u32at(sym, 0)? as usize..)?
             .split(|b| *b == 0)
             .next()?;
-        let Some((_, id)) = NAMES.iter().find(|p| p.0 == name) else {
+        let id = if let Some((_, id)) = NAMES.iter().find(|p| p.0 == name) {
+            *id
+        } else if abi != 0 {
+            if let Some((_, id)) = crate::streams::NAMES.iter().find(|p| p.0 == name) {
+                // Older private states have different dead-field semantics.
+                // Keep those paths entirely original until separately reviewed.
+                if (abi == 2 && matches!(*id, 2 | 4 | 6 | 7 | 9 | 11)) || (abi == 6 && *id == 12) {
+                    continue;
+                }
+                STREAM | (abi << 16) | *id
+            } else {
+                continue;
+            }
+        } else {
             continue;
         };
         let mut va = u64at(sym, 8)?;
@@ -366,7 +537,7 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
                 .iter()
                 .any(|p: &(u64, usize, u32, u32, u32)| p.0 == va)
         {
-            functions.push((va, at, word, *id, auth));
+            functions.push((va, at, word, id, auth));
         }
     }
     if functions.is_empty() {
@@ -382,6 +553,29 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
     } else {
         Vec::new()
     };
+    let trace_symbols: Vec<_> = symdata
+        .chunks_exact(24)
+        .enumerate()
+        .filter_map(|(i, s)| {
+            let name = strings
+                .get(u32at(s, 0)? as usize..)?
+                .split(|b| *b == 0)
+                .next()?;
+            name.starts_with(b"ZSTD_trace_").then_some(i as u64)
+        })
+        .collect();
+    let trace_slots: Vec<_> = rela
+        .chunks_exact(24)
+        .filter_map(|r| {
+            let info = u64at(r, 8)?;
+            let slot = u64at(r, 0)?;
+            (info as u32 == 1025
+                && trace_symbols.contains(&(info >> 32))
+                && slot % 8 == 0
+                && map(slot, 8).is_some())
+            .then_some(slot)
+        })
+        .collect();
     let versions = if let Some(addr) = value(0x6ffffff0) {
         let at = map(addr, sym_len / 12)?;
         Some(bytes.get(at..at + sym_len / 12)?.to_vec())
@@ -425,9 +619,9 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
     let code_at = align(phsize, 16)?;
     // Every wrapper has the same fixed width (the ninth argument load replaces
     // a register zero). Obtain it with valid dummy targets before laying out RW.
-    let width = words(rxva + code_at as u64, rxva, 0xd503201f, 1, rxva, 0xd503201f)?.len();
+    let width = WRAPPER_BYTES;
     let init_at = code_at + width * functions.len();
-    let init_size = initializer(rxva + init_at as u64, rxva, original_init)?.len();
+    let init_size = initializer(rxva + init_at as u64, rxva, original_init, &trace_slots)?.len();
     let rxsize = init_at + init_size;
     let rwoff = align(rxoff + rxsize, page)?;
     let rwva = rxva + align(rxsize, page)? as u64;
@@ -499,7 +693,7 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
     let mut out = bytes.to_vec();
     out.resize(rwoff, 0);
     out.extend(&rw);
-    let init = initializer(rxva + init_at as u64, rwva, original_init)?;
+    let init = initializer(rxva + init_at as u64, rwva, original_init, &trace_slots)?;
     if init.len() != init_size {
         return None;
     }
@@ -509,7 +703,7 @@ pub fn adapt(bytes: &[u8], enabled: bool) -> Option<Vec<u8>> {
     recipe.extend(Sha256::digest(bytes));
     for (i, (target, off, original, function, auth)) in functions.into_iter().enumerate() {
         let va = rxva + (code_at + i * width) as u64;
-        let code = words(va, target, original, function, rwva, auth)?;
+        let code = wrapper(va, target, original, function, rwva, auth)?;
         if code.len() != width {
             return None;
         }

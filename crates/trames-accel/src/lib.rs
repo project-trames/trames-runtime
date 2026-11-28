@@ -10,4 +10,5 @@ pub mod integer;
 pub mod native;
 pub mod numeric;
 mod strings;
+pub mod streams;
 pub use trames_bridge::hash::{Registry, ABI_VERSION, MAX_INPUT};

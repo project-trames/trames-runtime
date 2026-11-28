@@ -360,6 +360,7 @@ impl<C: Cpu> crate::process::exec::Executor<C> for DiskPool<C> {
 /// Shared authority over existing CPU slots. Only startup/teardown and command
 /// publication take a per-slot lock; no guest CPU/Memory crosses that lock.
 pub(super) struct Starter<C: Cpu> {
+    streams: trames_accel::streams::Shared,
     workers: Arc<Vec<Mutex<Option<Worker<C>>>>>,
     send: mpsc::Sender<Event<C>>,
     active: Arc<AtomicUsize>,
@@ -370,6 +371,7 @@ pub(super) struct Starter<C: Cpu> {
     closed: Arc<AtomicBool>,
 }
 pub(super) struct Pool<C: Cpu> {
+    streams: trames_accel::streams::Shared,
     workers: Arc<Vec<Mutex<Option<Worker<C>>>>>,
     closed: Arc<AtomicBool>,
     send: mpsc::Sender<Event<C>>,
@@ -392,6 +394,7 @@ impl<C: Cpu> Pool<C> {
     pub fn with_profiling(count: usize, profile_native_overlap: bool) -> Self {
         let (send, receive) = mpsc::channel();
         Self {
+            streams: trames_accel::streams::Shared::default(),
             workers: Arc::new((0..count).map(|_| Mutex::new(None)).collect()),
             closed: Arc::new(AtomicBool::new(false)),
             disk: Arc::new(DiskPool {
@@ -412,6 +415,7 @@ impl<C: Cpu> Pool<C> {
     }
     pub fn starter(&self) -> Starter<C> {
         Starter {
+            streams: self.streams.clone(),
             workers: self.workers.clone(),
             send: self.send.clone(),
             active: self.active.clone(),
@@ -563,12 +567,13 @@ impl<C: Cpu> Starter<C> {
         let active_native = self.active_native.clone();
         let peak_native = self.peak_native.clone();
         let profile_native_overlap = self.profile_native_overlap;
+        let streams=self.streams.clone();
         let join = thread::Builder::new()
             .name(format!("trames-cpu-{index}"))
             .spawn(move || {
                 let mut engine = C::Engine::default();
                 let mut perf_pacing = PerfPacing::default();
-                let mut registry = trames_accel::native::Registry::default();
+                let mut registry = trames_accel::native::Registry::with_stream_cache(streams);
                 let mut direct_scratch = Vec::new();
                 let mut file_cache = trames_vfs::DiskReadCache::default();
                 let barrier_pending = Arc::new(AtomicBool::new(false));

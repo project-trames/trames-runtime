@@ -4,7 +4,7 @@ use super::{Runtime, RuntimeOptions};
 use std::path::PathBuf;
 type TestRuntime = Runtime<trames_cpu::Cpu>;
 use trames_vfs::{DiskOptions, Vfs};
-fn run_case(input: PathBuf, enabled: bool, store: PathBuf, cpus: usize) {
+fn run_case(input: PathBuf, enabled: bool, store: PathBuf, cpus: usize, stream: bool) {
     let mut v = Vfs::open_disk(&store, DiskOptions::default()).unwrap();
     if input.join("ld-musl-aarch64.so.1").exists() {
         v.import_executable(
@@ -44,7 +44,12 @@ fn run_case(input: PathBuf, enabled: bool, store: PathBuf, cpus: usize) {
         v.import_file(format!("/usr/lib/{name}").as_bytes(), bytes)
             .unwrap();
     }
-    let fixture = std::fs::read(input.join("compute-all-probe")).unwrap();
+    let fixture = std::fs::read(input.join(if stream {
+        "compute-stream-probe"
+    } else {
+        "compute-all-probe"
+    }))
+    .unwrap();
     v.import_executable(b"/bin/native-compute", fixture.clone())
         .unwrap();
     let mut runtime = TestRuntime::load_with_options(
@@ -60,19 +65,34 @@ fn run_case(input: PathBuf, enabled: bool, store: PathBuf, cpus: usize) {
     .unwrap();
     runtime.cpu_count = cpus;
     let mut output = trames_linux::CapturedOutput::default();
-    let exit = runtime.run(&mut output, 500_000_000).unwrap();
+    let exit = runtime.run(&mut output, 5_000_000_000).unwrap();
     eprintln!(
         "{}",
-        serde_json::json!({"family":input.file_name().unwrap().to_string_lossy(),"enabled":enabled,"cpus":cpus,"calls":runtime.metrics.native.compute_calls,"worker_calls":runtime.metrics.native.worker_calls,"operations":runtime.metrics.native.compute_operations,"fallbacks":runtime.metrics.native.compute_fallbacks})
+        serde_json::json!({"family":input.file_name().unwrap().to_string_lossy(),"enabled":enabled,"cpus":cpus,"calls":runtime.metrics.native.compute_calls,"worker_calls":runtime.metrics.native.worker_calls,"operations":runtime.metrics.native.compute_operations,"fallbacks":runtime.metrics.native.compute_fallbacks,"stream_steps":runtime.metrics.native.stream_native_operations,"stream_learns":runtime.metrics.native.stream_learn_operations})
     );
     assert_eq!(exit.code, 0, "{:?}", output.stderr.read(65536));
     if enabled {
         assert!(runtime.metrics.native.compute_calls > 0);
         assert_eq!(
             runtime.metrics.native.worker_calls,
-            runtime.metrics.native.compute_calls
+            runtime.metrics.native.compute_calls + runtime.metrics.native.stream_calls
         );
+        if stream {
+            let expected = if input.file_name().unwrap() == "debian13" {
+                [true, false, true, true, true]
+            } else {
+                [true; 5]
+            };
+            assert!(runtime
+                .metrics
+                .native
+                .stream_native_operations
+                .iter()
+                .zip(expected)
+                .all(|(n, wanted)| (*n > 0) == wanted));
+        }
     } else {
+        assert_eq!(runtime.metrics.native.stream_native_steps, 0);
         assert_eq!(runtime.metrics.native.compute_calls, 0);
     }
 }
@@ -91,7 +111,7 @@ fn native_compute_private_libraries_retain_original_fallback_and_run_on_workers(
                     cpus,
                     enabled
                 ));
-                run_case(input.clone(), enabled, store.clone(), cpus);
+                run_case(input.clone(), enabled, store.clone(), cpus, false);
                 std::fs::remove_dir_all(store).unwrap();
             }
         }
@@ -119,6 +139,25 @@ fn native_compute_auxv_is_distinct_from_audio_capabilities() {
                         .1,
                     u64::from(output) | (u64::from(input) << 1)
                 );
+            }
+        }
+    }
+}
+
+#[test]
+#[ignore = "requires original AArch64 codecs and the streaming/fork fixture executable"]
+fn native_stream_codecs_preserve_original_state_across_workers_and_fork() {
+    let dirs = std::env::var_os("TRAMES_STREAM_FIXTURES").expect("stream fixture directories");
+    for input in std::env::split_paths(&dirs) {
+        for cpus in [1, 2, 4] {
+            for enabled in [false, true] {
+                let store = std::env::temp_dir().join(format!(
+                    "trames-stream-{}-{}-{cpus}-{enabled}",
+                    std::process::id(),
+                    input.file_name().unwrap().to_string_lossy()
+                ));
+                run_case(input.clone(), enabled, store.clone(), cpus, true);
+                std::fs::remove_dir_all(store).unwrap();
             }
         }
     }

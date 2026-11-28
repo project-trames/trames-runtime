@@ -467,6 +467,14 @@ fn stack_auxv(options: RuntimeOptions) -> Vec<(u64, u64)> {
             },
         ),
         (
+            trames_accel::streams::AUXV_KEY,
+            if options.pure_accelerator && trames_accel::streams::ENABLED {
+                trames_accel::streams::PROFILE
+            } else {
+                0
+            },
+        ),
+        (
             trames_accel::callbacks::AUXV_KEY,
             if options.pure_accelerator {
                 trames_accel::callbacks::PROFILE
