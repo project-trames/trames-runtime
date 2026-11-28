@@ -1,0 +1,26 @@
+{
+  "baseline_runtime": "7d74ff5809364b8e41081f507da2cf1d6e7a661b",
+  "rustc": "rustc 1.101.0-nightly (4ebd25825 2026-10-15)\nbinary: rustc\ncommit-hash: 4ebd258257737d5b7635c116fa7d281627a7e937\ncommit-date: 2026-10-15\nhost: aarch64-unknown-linux-gnu\nrelease: 1.101.0-nightly\nLLVM version: 23.1.4\n",
+  "source": "/mnt/trames-output/jit-lut-source",
+  "target": "/mnt/trames-output/jit-lut-linux-target",
+  "binary_sha256": "ec0fd736b869f2eb37bef3f8272528b3c3f4aebba9d49f6d3a5d7429fa87bc2a",
+  "harness_sha256": "ad5cb45f0f0e5ca9e63f3ea97773524ec56ce6328316cf11727c31441b10eb0d",
+  "cpu_affinity": 0,
+  "page_size": 4096,
+  "hwcap": "0xefb3ffff",
+  "hwcap2": "0x2000100326181",
+  "samples": 16,
+  "warmup": 4,
+  "rounds": 8,
+  "trips": 65536,
+  "order": [
+    "jit",
+    "interpreter",
+    "interpreter",
+    "jit",
+    "jit",
+    "interpreter",
+    "interpreter",
+    "jit"
+  ]
+}

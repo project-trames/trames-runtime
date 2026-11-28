@@ -36,6 +36,7 @@ mod flags;
 mod floating;
 mod half_vector;
 mod load_store;
+pub mod lookup;
 mod modern_crypto;
 mod modern_memory;
 mod modern_scalar;
@@ -462,6 +463,8 @@ impl Cpu {
             ) {
                 next = pc.wrapping_add(branch.offset as i64 as u64);
             }
+        } else if let Some(lookup) = lookup::Lookup::decode(ins) {
+            self.apply_lookup(lookup);
         } else if let Some(target) = self.execute_extended(ins, memory)? {
             next = target;
         } else {
@@ -1123,3 +1126,6 @@ mod scalar_ignored_tests;
 
 #[cfg(test)]
 mod vector_encoding_tests;
+
+#[cfg(test)]
+mod lookup_tests;

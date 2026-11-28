@@ -1,0 +1,211 @@
+{
+  "baseline": {
+    "runtime": "7d74ff5809364b8e41081f507da2cf1d6e7a661b",
+    "android": "b82c939f2bf12b07d8ca8cd6603e37797ede9f8c"
+  },
+  "source_sha256": {
+    "crates/trames-interpreter/src/lib.rs": "0bb034a2b4ce0dde29a0658629cfa23d903421dd74fafe69698eda133542e0ca",
+    "crates/trames-interpreter/src/cached.rs": "db3111a2b08748a63269a7930a9decbb040372335d9d47630ab0319bfa4bdb1e",
+    "crates/trames-interpreter/src/lookup.rs": "d69f21bca92d79d8aabb96adefbf3ac564e15d45c31fd4bafe9a7982941345fa",
+    "crates/trames-jit/src/vector_ops.rs": "6652a2055757d258df1eddc914e25e52fbd2b6eededff56173eeb6cb230dc436",
+    "crates/trames-jit/src/features.rs": "0093c34056d46a3eb068b9e2abdbf890b06296d2e5e6490d45e885bc949a0853"
+  },
+  "test_source_sha256": {
+    "crates/trames-interpreter/src/lookup_tests.rs": "41648ba62814277a0a50f5be6451e6500b2e8cb06ebdd13508185f1df12035a4",
+    "crates/trames-interpreter/src/lookup_test_support.rs": "b873a86fa45ead616f8fb04082bf3f295abb41c8d2ff79b369ac48b8f58ba024",
+    "crates/trames-jit/src/lut_codegen_tests.rs": "3f89f2b074670e60604f1df225a33d1c5a496c9381bc7f669f55ee7e45e03aaa",
+    "crates/trames-jit/src/vector_codegen_tests.rs": "4290fedb8f18eebb6894dc13b009781d23e8d8f047bb7d84180415857426a88f",
+    "crates/trames-jit/src/vector_encoding_tests.rs": "e60bc4a436d93c0e5807a4eaf27af9c7151b463fbe571e274c2cb8042615517b",
+    "crates/trames-jit/tests/differential.rs": "c228ae3f6eae0711168d0a0aa63dcb8cb3a98a5a55ffb4ed4899a17c4f050878",
+    "crates/trames-jit/tests/support/lut_category.rs": "a03315ae416d67019b48bdaf45e05301c1d2219efe8c7e17d532c334f2ddd4b9",
+    "crates/trames-jit/tests/support/vector_encoding_category.rs": "206916058ec353a4b53bc6b48bc15b984714e4617295de37db887acd5a2a798c"
+  },
+  "scope": {
+    "fixed_width_forms": 4,
+    "opcode_segment_forms": 18,
+    "all_legal_encodings": 589824,
+    "actual_native_programs": 589824,
+    "cached_reference_programs": 589824,
+    "stepped_reference_programs": 589824,
+    "packed_index_alias_programs": 36864,
+    "expanded_fp_simd_admitted": 74648,
+    "lut_selectors": 576,
+    "old_rejection_words_newly_allocated": 9,
+    "native_emission_programs": 576,
+    "linux_jit_tests_per_profile": 180,
+    "apple_jit_tests": 136,
+    "interpreter_tests_each_host": 58,
+    "android_jit_tests": 9,
+    "android_default_tests": 1,
+    "android_probe_programs": 864
+  },
+  "actual_host": {
+    "hwcap": "0xefb3ffff",
+    "hwcap2": "0x2000100326181",
+    "page_size": 4096
+  },
+  "model": {
+    "tool": "QEMU 10.0.13 max",
+    "binary_sha256": "088500814a5a8e0e0ee3cad0f6c600b5dfa261f77cc0e6460f81b0b616e09509",
+    "process": {
+      "hwcap": "0xeffffffb",
+      "hwcap2": "0x18007fc77fff",
+      "page_size": 4096
+    },
+    "test_executables": {
+      "differential": {
+        "path": "/mnt/trames-output/jit-lut-linux-target/debug/build/trames-jit/2ae1ad06ea568dd4/out/differential-2ae1ad06ea568dd4",
+        "sha256": "baf25a12efaa34095fb4aa1ab2c8459359e35811f281747362613b8eba9e47ef"
+      },
+      "trames_android_core": {
+        "path": "/mnt/trames-output/jit-lut-linux-target/debug/build/trames-android-core/d9508bc8ef4a68e3/out/trames_android_core-d9508bc8ef4a68e3",
+        "sha256": "e4e218edca20510fb85f0e8f8baf288395700c3e4aef9783836c58a5aad2e617"
+      }
+    },
+    "scope": "LUT absent-host rejection with exact dirty prefix. Positive acceptance is actual LUT-advertising Linux, not this model."
+  },
+  "generated_code": {
+    "vector": {
+      "identical": true,
+      "programs": 1094,
+      "sha256": "9e8277d119f8dfbca0b387ad117d011ee5dcbc46a35ba5345fc43965f8463593",
+      "layout": "LAYOUT 192 152 264 120"
+    },
+    "control": {
+      "identical": true,
+      "programs": 2816,
+      "sha256": "27bef106dc7a9873283119e2e1c93c90315f82c0c1095590f8515dbeb4a8bb70",
+      "layout": "LAYOUT 192 152 264 120"
+    },
+    "scalar": {
+      "identical": true,
+      "programs": 838,
+      "sha256": "87fc9c57b620d0fb5040d5ffc2abbd46dc38d76cc010ba45eb20732895cc284f",
+      "layout": "LAYOUT 192 152 264 120"
+    },
+    "decoded_layout": {
+      "same": true,
+      "Op_Instruction_Entry_Cpu": [
+        24,
+        32,
+        40,
+        992
+      ]
+    }
+  },
+  "benchmarks": {
+    "luti2-byte": {
+      "speed_ratio_over_reference": 57.77848877112684,
+      "pair_ratios": [
+        57.39596514024901,
+        57.397330678030045,
+        57.373193640500816,
+        58.96341514384564
+      ]
+    },
+    "luti2-half": {
+      "speed_ratio_over_reference": 32.498356197778534,
+      "pair_ratios": [
+        32.560966568696635,
+        32.60191813082954,
+        32.47928068924908,
+        32.35182125608349
+      ]
+    },
+    "luti4-byte": {
+      "speed_ratio_over_reference": 59.79881342025749,
+      "pair_ratios": [
+        57.58761218936047,
+        66.40008885559224,
+        57.98242108230862,
+        57.67348410143822
+      ]
+    },
+    "luti4-half": {
+      "speed_ratio_over_reference": 31.80209288590606,
+      "pair_ratios": [
+        31.10064366062695,
+        33.59410075408662,
+        31.348234983920733,
+        31.23038337938313
+      ]
+    }
+  },
+  "verification_notes": "Full scoped CPU/platform checks pass. Later outside-timing benchmark reference check validated by dedicated example lint and execution; unchanged CPU suite results reused. iPad dependency inputs unchanged; previous isolated graph reused with fresh current iOS source build. Prior integer-control timing variation remains unresolved and is not replaced by LUT throughput.",
+  "original_log_sha256": {
+    "linux-debug.log": "a1911fb834583272b209b0153d29bdfdf37fe46ae593795901df051e43351e68",
+    "linux-release.log": "d09dfba2b53a635ceac597e8ef5b843bb16ca67e7aac288db3e6bdb7112db949",
+    "interpreter-linux.log": "2ac119994f5aa0fa14c3ec5c701e5ff5c8ff0449a67a9b3e2fa3dd08e9a6a770",
+    "clippy-linux.log": "5cf8fbfff08036191b3b9e1102ecfec91168c829c3c3abb5b4dd5c2fe397cf58",
+    "clippy-amd64.log": "38a208f99692e30af49b3dafb5083540266ad99db68e3d479958fed37979810b",
+    "apple-jit.log": "55525859be8bfab357b1e4e9c63567718aa3f9f7c6d2e375fcf37dc12078c987",
+    "interpreter-apple.log": "c164b2dc887429b55933268fa2da811dbeba01df0fd8ab269e561a3f38060031",
+    "clippy-apple.log": "0914016961e4e9a18ce6286bc948ef5e783bbdf554180de472c19103d51f7037",
+    "default-clippy-apple.log": "841330df82ef5e0607a1305c49c2abb8ef51cd5bffbebc67ea7038ad77c7c26e",
+    "ios.log": "cdcbe605078f26cdf4c9d18df1f4fafc014613cf01ea817943dbf236cbd3dd61",
+    "android-linux.log": "cad20307352c071170f700d89b587f55ae43529a1357c841d2a825c03c20e3a7",
+    "android-linux-default.log": "4d72bfc304fc1dc309961a76de8b085abe6acf1065c48459b7c1e157841e745f",
+    "android-linux-clippy.log": "98002702790246915fba62c647be625f247b3ac0b5fb2fae68ca5579bbe85967",
+    "android-apple.log": "3ea929a85646ab31e8b7b6cfe3ae53f32da1324234d544bdea3ae8370e1cb244",
+    "android-apple-default.log": "3e5bbe8cacd0c959d7e51c4441254ee641640fb3f50625b340e12b2e1f06934e",
+    "android-apple-clippy.log": "f5eb3b0ab909de73aea66bb3815218a7e9171a17402c5dce2244652f1b25ac5f",
+    "baseline-shared-red.log": "d8d19ad41a0662207c0979931d163a2760db68cf632ca15e7099217d98c202ff",
+    "baseline-host-red.log": "cb45c1d46b233b3748701770fe852d31a65e38a2b66b23a380ddc2bbe28ea7bc",
+    "before-layout.log": "d55ce8bc5f9a9727d4904244d27bbb9055d01f0cbee05c229a79be784a574c56",
+    "before-codegen.log": "fb6d347dba9c96633ecc92fafd521033c1bb54c17e4d800b1a4b1578edce04f4",
+    "after-codegen.log": "847d6a9da4f5cf10d54f33fcdef7f6e58c4bef4cd9f46c8f831424c38d6b976d",
+    "native-codegen.log": "cb15d8bdb877e0c43e156af68b2fd3fe06a5ea4f1f577949e1dc98a1c4f349c7",
+    "example-clippy-linux.log": "bc08ce068da069167d32022ba6f9ea35a89c96b31b0921a775f7d658cbfa3e27",
+    "example-clippy-apple.log": "17adad2485b831497d7c2d61e06ae9aa79891970a7e809a18ab5b7512b9f960c",
+    "model-absence.log": "a4f8b50612ab57e9e466943e6b2aa077fd65f499a2c329677c6d489dd31e6dcb",
+    "android-model-absence.log": "5efa1711cf3628789c540fba6e016848c7220f48f1de8d524c2039a8f9f12112"
+  },
+  "retained_log_encoding": "Final empty lines normalized only; original captured byte hashes above retain provenance.",
+  "artifacts_sha256": {
+    "after-codegen.log": "847d6a9da4f5cf10d54f33fcdef7f6e58c4bef4cd9f46c8f831424c38d6b976d",
+    "android-apple-clippy.log": "f5eb3b0ab909de73aea66bb3815218a7e9171a17402c5dce2244652f1b25ac5f",
+    "android-apple-default.log": "3e5bbe8cacd0c959d7e51c4441254ee641640fb3f50625b340e12b2e1f06934e",
+    "android-apple.log": "3ea929a85646ab31e8b7b6cfe3ae53f32da1324234d544bdea3ae8370e1cb244",
+    "android-linux-clippy.log": "98002702790246915fba62c647be625f247b3ac0b5fb2fae68ca5579bbe85967",
+    "android-linux-default.log": "4d72bfc304fc1dc309961a76de8b085abe6acf1065c48459b7c1e157841e745f",
+    "android-linux.log": "cad20307352c071170f700d89b587f55ae43529a1357c841d2a825c03c20e3a7",
+    "android-model-absence.log": "9af6f840480eb2ca4f517d29e241e904d3295c4a54355cd75761a253f5c01fc4",
+    "apple-jit.log": "55525859be8bfab357b1e4e9c63567718aa3f9f7c6d2e375fcf37dc12078c987",
+    "baseline-host-red.log": "cb45c1d46b233b3748701770fe852d31a65e38a2b66b23a380ddc2bbe28ea7bc",
+    "baseline-shared-red.log": "d8d19ad41a0662207c0979931d163a2760db68cf632ca15e7099217d98c202ff",
+    "before-codegen.log": "fb6d347dba9c96633ecc92fafd521033c1bb54c17e4d800b1a4b1578edce04f4",
+    "before-layout.log": "d55ce8bc5f9a9727d4904244d27bbb9055d01f0cbee05c229a79be784a574c56",
+    "benchmark-provenance.json": "96035b353dfcdc99c0b2272a710d5f13b00910001ab945ec718ed90804139291",
+    "benchmark-runner.py": "78adc7baeb93b31b391b2c2381f67315a8db76e9ce3fb5018997715568d6acc1",
+    "benchmark-samples.jsonl": "cc520fc2a279e2ef7dd4cb9a14081fed8c1358d4e2034cf6c503832a13520bab",
+    "benchmark-summary.json": "c8ae4408358f14f3bc532381f1fdb140f2ab0b06f3373bd1d05fc3964dcdeb5f",
+    "category.S": "ac801ab69187236e149c6b3a47091ac46b5590be523702760e88a11fca20c830",
+    "clippy-amd64.log": "38a208f99692e30af49b3dafb5083540266ad99db68e3d479958fed37979810b",
+    "clippy-apple.log": "0914016961e4e9a18ce6286bc948ef5e783bbdf554180de472c19103d51f7037",
+    "clippy-linux.log": "5cf8fbfff08036191b3b9e1102ecfec91168c829c3c3abb5b4dd5c2fe397cf58",
+    "codegen-comparison.json": "f195e0c34647b2a615ae3db60e6272b3e382558edd329f735405e0d8bd8983ba",
+    "control-codegen.txt.gz": "c48bb906eee2cdd6e38aa85e5ff511db997aa624f867cad6c88decbc4f54b28e",
+    "default-clippy-apple.log": "841330df82ef5e0607a1305c49c2abb8ef51cd5bffbebc67ea7038ad77c7c26e",
+    "example-clippy-apple.log": "17adad2485b831497d7c2d61e06ae9aa79891970a7e809a18ab5b7512b9f960c",
+    "example-clippy-linux.log": "bc08ce068da069167d32022ba6f9ea35a89c96b31b0921a775f7d658cbfa3e27",
+    "expanded-vector-admission.words.gz": "d8453c477f1cafc9440d5ffb1e873997f7bcded97282a364ce2a373f3c8bf374",
+    "expanded-vector-oracle.json": "d15f086beee34d9966ff4c2016ba8e7476aad07285488088ec34fda6e6cfa146",
+    "forms.words": "060890e30d1e48a8e0ae9a3a927bb3031ad1092ee74179b3f4e92259fb48a3c8",
+    "host-caps.json": "1e3d3dba1c4b12b0b09674da7840ce9feda394d452fe2d0ee4910adc34b7f3c7",
+    "interpreter-apple.log": "c164b2dc887429b55933268fa2da811dbeba01df0fd8ab269e561a3f38060031",
+    "interpreter-linux.log": "2ac119994f5aa0fa14c3ec5c701e5ff5c8ff0449a67a9b3e2fa3dd08e9a6a770",
+    "ios.log": "cdcbe605078f26cdf4c9d18df1f4fafc014613cf01ea817943dbf236cbd3dd61",
+    "ipad-cpu-tree.txt": "6c3ca7ef47c6485b6fe3e4369074daf2d85bdee34cf982debbf0a42adc56885e",
+    "ipad-isolation-provenance.json": "e85b144d47fb44609258a5a6cac9be109c317bf80cd7d97ef84520b95f4de555",
+    "linux-debug.log": "a1911fb834583272b209b0153d29bdfdf37fe46ae593795901df051e43351e68",
+    "linux-release.log": "d09dfba2b53a635ceac597e8ef5b843bb16ca67e7aac288db3e6bdb7112db949",
+    "model-absence.log": "cc5acb0e02624b1a934dbb877ffb969082ec2e79e52d140b56b422dcdff233a2",
+    "model-caps.json": "e2639957b3d04ca816a7d1fd87bd5dd6d92bab365c40a137fc7e76c582b1d96f",
+    "native-codegen.log": "cb15d8bdb877e0c43e156af68b2fd3fe06a5ea4f1f577949e1dc98a1c4f349c7",
+    "native-lut-codegen.txt.gz": "0ed1d6772b728be62317943f2cd77f5e7957565adeb60c1faea1dec2ddeed734",
+    "oracle.json": "deb575c7bd489dc6bdfd50892585a3bea79ff0615a3e5d2a6a6e44cb09c2ceaa",
+    "scalar-codegen.txt.gz": "0d635b8c2fe64d2e67f876428ee4c2113cdb47e413b29ea2e9cd37320a1aade2",
+    "selectors.words": "e9cd91c2eb5a61354c926750a634c8700b37ace6d80fe1de5943bb5e9ae83c3b",
+    "vector-codegen.txt.gz": "d2bc91dd341482fa1148babbe6022652b3b9d6c746a3b2f0e1e5ab3c176e6322"
+  }
+}

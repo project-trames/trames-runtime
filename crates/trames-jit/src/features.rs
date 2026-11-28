@@ -45,6 +45,7 @@ const NAMES: &[(usize, u8, &str)] = &[
     (1, 43, "mops"),
     (1, 44, "hbc"),
     (1, 47, "lse128"),
+    (1, 49, "lut"),
 ];
 pub(crate) fn profile() -> &'static Profile {
     PROFILE.get_or_init(|| {
@@ -58,7 +59,7 @@ pub(crate) fn profile() -> &'static Profile {
         // the host. Stateful extensions wait for their real context-save path.
         let allowed = Features {
             hwcap: raw.hwcap & (trames_interpreter::HWCAP | (1 << 33)),
-            hwcap2: raw.hwcap2 & (trames_interpreter::HWCAP2 | (1 << 44) | (1 << 47)),
+            hwcap2: raw.hwcap2 & (trames_interpreter::HWCAP2 | (1 << 44) | (1 << 47) | (u64::from(raw.hwcap & 2 != 0) << 49)),
         };
         let words = [allowed.hwcap, allowed.hwcap2];
         let names = NAMES
@@ -294,6 +295,39 @@ mod tests {
         }
     }
     #[test]
+    fn lut_requires_both_existing_asimd_and_real_host_lut_without_software_advertisement() {
+        assert_eq!(trames_interpreter::HWCAP2 & (1 << 49), 0);
+        for raw in include_str!("../../../docs/validation/jit-lut-20261128/forms.words").lines() {
+            let word = u32::from_str_radix(raw.split_whitespace().next().unwrap(), 16).unwrap();
+            assert!(permits(
+                Features {
+                    hwcap: 2,
+                    hwcap2: 1 << 49
+                },
+                word
+            ));
+            assert!(!permits(
+                Features {
+                    hwcap: 0,
+                    hwcap2: 1 << 49
+                },
+                word
+            ));
+            assert!(!permits(
+                Features {
+                    hwcap: 2,
+                    hwcap2: 0
+                },
+                word
+            ));
+        }
+        let p = profile();
+        assert_eq!(
+            p.allowed.hwcap2 & (1 << 49) != 0,
+            p.raw.hwcap2 & (1 << 49) != 0 && p.raw.hwcap & 2 != 0
+        );
+    }
+    #[test]
     fn untranslated_extensions_cannot_escape_host_isa_gates() {
         assert_eq!(trames_interpreter::HWCAP & (1 << 33), 0);
         assert_eq!(trames_interpreter::HWCAP2 & (1 << 44), 0);
@@ -320,6 +354,8 @@ mod tests {
             (0x54000010, 1, 44),
             (0x74010020, 0, 33),
             (0xf51f8020, 0, 33),
+            (0x4e801020, 1, 49),
+            (0x4e401020, 1, 49),
         ] {
             assert!(!permits(base, word), "{word:08x}");
             let mut enabled = base;

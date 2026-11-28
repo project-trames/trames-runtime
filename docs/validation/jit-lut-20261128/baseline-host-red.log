@@ -1,0 +1,34 @@
+UTC 2026-11-28T12:14:38.044789+00:00
+COMMAND ['cargo', 'test', '--locked', '-p', 'trames-jit', '--features', 'native-aarch64', 'lut_raw_host_capability', '--', '--nocapture']
+   Compiling trames-memory v1.3.0 (/mnt/trames-output/jit-lut-baseline-source/crates/trames-memory)
+   Compiling trames-engine v1.3.0 (/mnt/trames-output/jit-lut-baseline-source/crates/trames-engine)
+   Compiling trames-interpreter v1.3.0 (/mnt/trames-output/jit-lut-baseline-source/crates/trames-interpreter)
+   Compiling trames-jit v1.3.0 (/mnt/trames-output/jit-lut-baseline-source/crates/trames-jit)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.62s
+     Running unittests src/lib.rs (/mnt/trames-output/jit-lut-baseline-target/debug/build/trames-jit/24b6517ab8a40b53/out/trames_jit-24b6517ab8a40b53)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 37 filtered out; finished in 0.00s
+
+     Running tests/differential.rs (/mnt/trames-output/jit-lut-baseline-target/debug/build/trames-jit/2ae1ad06ea568dd4/out/differential-2ae1ad06ea568dd4)
+
+running 1 test
+
+thread 'lut_category::lut_raw_host_capability_is_passed_through_to_native_cpu' (374005) panicked at crates/trames-jit/tests/support/lut_category.rs:221:5:
+assertion `left == right` failed
+  left: false
+ right: true
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test lut_category::lut_raw_host_capability_is_passed_through_to_native_cpu ... FAILED
+
+failures:
+
+failures:
+    lut_category::lut_raw_host_capability_is_passed_through_to_native_cpu
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 140 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p trames-jit --test differential`
+
+EXIT 101 ELAPSED 8.670736036991002

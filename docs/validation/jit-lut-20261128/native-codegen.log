@@ -1,0 +1,19 @@
+UTC 2026-11-28T12:16:55.735318+00:00
+COMMAND ['cargo', 'test', '--locked', '-p', 'trames-jit', '--features', 'native-aarch64', 'lut_hardware_opcodes', '--', '--nocapture']
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running unittests src/lib.rs (/mnt/trames-output/jit-lut-linux-target/debug/build/trames-jit/24b6517ab8a40b53/out/trames_jit-24b6517ab8a40b53)
+
+running 1 test
+LUT opcode/alias/pressure/mode receipt: 576 compiled programs
+test native::lut_codegen_tests::lut_hardware_opcodes_keep_fields_without_helpers_and_do_not_grow_native_layouts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 38 filtered out; finished in 0.04s
+
+     Running tests/differential.rs (/mnt/trames-output/jit-lut-linux-target/debug/build/trames-jit/2ae1ad06ea568dd4/out/differential-2ae1ad06ea568dd4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 141 filtered out; finished in 0.00s
+
+
+EXIT 0 ELAPSED 0.13657988197519444

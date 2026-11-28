@@ -4273,3 +4273,6 @@ mod control_category;
 
 #[path = "support/vector_encoding_category.rs"]
 mod vector_encoding_category;
+
+#[path = "support/lut_category.rs"]
+mod lut_category;

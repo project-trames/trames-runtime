@@ -31,6 +31,10 @@ fn vector_generated_code_receipt() {
             let Some(op) = crate::vector_ops::decode(word) else {
                 continue;
             };
+            // Preserve the original before/after control cohort; LUT has its own receipt.
+            if op.required.hwcap2 & (1 << 49) != 0 {
+                continue;
+            }
             let first = seen.insert(format!(
                 "{high:x}/{:?}/{:x}/{:x}",
                 op.form, op.required.hwcap, op.required.hwcap2

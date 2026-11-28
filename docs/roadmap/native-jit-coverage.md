@@ -126,6 +126,16 @@ Compilation, Linux execution and Android app-UID/device acceptance are distinct.
   with cold/warm decoder-entry tracing and complete state/retirement checks.
   See [vector-encoding validation](../validation/jit-vector-encoding-20261128.md).
 
+- Fixed-width AdvSIMD LUT: all LUTI2/LUTI4 byte/halfword forms and every segment,
+  including two-register halfword tables wrapping v31 to v0. The existing vector
+  allocator emits real host opcodes with no helper, new form or CPU bank. The
+  cold capability intersection requires ASIMD and kernel process HWCAP2_LUT.
+  All 589,824 legal encodings execute on actual LUT-positive ARM64 Linux; both
+  shared interpreter paths match an independent byte oracle. Missing-host model
+  faults preserve exact prefix state and do not interpret the lookup. SVE/SME
+  lookup forms remain outside the unadvertised scalable-state ABI. See
+  [LUT validation](../validation/jit-lut-20261128.md).
+
 LSE128 is exposed only when the process host provides it. LS64 and full hardware
 PAC/BTI/MTE remain unadvertised without their required shared-CPU/memory ownership.
 This does not change the interpreter-only backend's compatibility policy. New

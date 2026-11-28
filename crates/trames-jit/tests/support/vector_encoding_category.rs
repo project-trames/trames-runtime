@@ -106,7 +106,16 @@ fn all_sampled_fp_simd_errors_fault_directly_and_revalidate_without_decoder_entr
     if !NATIVE_COMPILED {
         return;
     }
-    for (i, raw) in REJECTED.lines().chain(CORRECTED.lines()).enumerate() {
+    let newly_allocated: std::collections::BTreeSet<_> =
+        include_str!("../../../../docs/validation/jit-lut-20261128/selectors.words")
+            .lines()
+            .collect();
+    for (i, raw) in REJECTED
+        .lines()
+        .chain(CORRECTED.lines())
+        .filter(|raw| !newly_allocated.contains(raw))
+        .enumerate()
+    {
         let word = u32::from_str_radix(raw, 16).unwrap();
         let mut m = Traced {
             memory: memory(&[word, 0xd4000001]),

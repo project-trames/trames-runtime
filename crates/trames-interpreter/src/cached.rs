@@ -140,6 +140,7 @@ enum Op {
         condition: u8,
     },
     CompareRegistersBranch(super::control::CompareBranch),
+    Lookup(super::lookup::Lookup),
     // Size/kind validation and scaled offsets are done once. Other memory
     // encodings retain the complete checked reference implementation.
     MemoryImmediate {
@@ -258,6 +259,8 @@ impl Instruction {
             }
         } else if let Some(branch) = super::control::CompareBranch::decode(word) {
             Op::CompareRegistersBranch(branch)
+        } else if let Some(lookup) = super::lookup::Lookup::decode(word) {
+            Op::Lookup(lookup)
         } else if word & 0x1f800000 == 0x12000000 {
             let n = (word >> 22) & 1;
             match logical_mask(n, (word >> 10) & 63, (word >> 16) & 63, wide) {
@@ -1162,6 +1165,7 @@ impl Cpu {
                     next = pc.wrapping_add(branch.offset as i64 as u64);
                 }
             }
+            Op::Lookup(lookup) if TAG == 27 => self.apply_lookup(lookup),
             Op::Fallback if TAG == 25 => {
                 self.condition_flags = *flags;
                 let result = self.execute_instruction(ins.word, memory);
@@ -1264,6 +1268,7 @@ macro_rules! tail_next {
             Op::Memory { .. } => become tail_op::<M, 24>($state, slot, $executed),
             Op::Fallback => become tail_op::<M, 25>($state, slot, $executed),
             Op::CompareRegistersBranch(_) => become tail_op::<M, 26>($state, slot, $executed),
+            Op::Lookup(_) => become tail_op::<M, 27>($state, slot, $executed),
         }
     }};
 }

@@ -179,7 +179,7 @@ fn every_admitted_fp_simd_selector_executes_natively_or_rejects_absent_host_feat
         }
     }
     assert_eq!(engine.stats.fallback_instructions, 0);
-    assert_eq!(counts.iter().sum::<u64>(), 74072);
+    assert_eq!(counts.iter().sum::<u64>(), 74648);
     eprintln!(
         "Complete FP/SIMD execution selectors: {} native, {} absent host",
         counts[0], counts[1]

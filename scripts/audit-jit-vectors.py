@@ -32,7 +32,7 @@ llvm.LLVMCreateDisasmCPUFeatures.argtypes = [ctypes.c_char_p, ctypes.c_char_p, c
 llvm.LLVMDisasmInstruction.restype = ctypes.c_size_t
 llvm.LLVMDisasmInstruction.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint64, ctypes.c_uint64, ctypes.c_void_p, ctypes.c_size_t]
 llvm.LLVMDisasmDispose.argtypes = [ctypes.c_void_p]
-features = "+v9.4a,+neon,+fp-armv8,+fullfp16,+fp16fml,+bf16,+i8mm,+complxnum,+rdm,+dotprod,+jsconv,+fptoint,+crypto,+sha3,+sm4"
+features = "+v9.4a,+neon,+fp-armv8,+fullfp16,+fp16fml,+bf16,+i8mm,+complxnum,+rdm,+dotprod,+jsconv,+fptoint,+crypto,+sha3,+sm4,+lut"
 context = llvm.LLVMCreateDisasmCPUFeatures(b"aarch64-linux-gnu", b"generic", features.encode(), None, 0, None, None)
 assert context
 
@@ -92,7 +92,7 @@ result = {
     "instructions": dict(sorted(counts.items())),
 }
 assert selectors == 524288
-assert len(admitted) == sum(counts.values()) == 74072
+assert len(admitted) == sum(counts.values()) == 74648
 assert not invalid and not outside
 assert sum(neighbors.values()) == 1776
 encoded = json.dumps(result, indent=2) + "\n"

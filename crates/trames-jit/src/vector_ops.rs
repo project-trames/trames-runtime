@@ -49,6 +49,18 @@ pub(super) fn owns(word: u32) -> bool {
 }
 pub(super) fn decode(word: u32) -> Option<Operation> {
     use Form::*;
+    if let Some(lookup) = trames_interpreter::lookup::Lookup::decode(word) {
+        return Some(Operation {
+            form: Table {
+                registers: lookup.registers(),
+                merge: false,
+            },
+            required: trames_execution::Features {
+                hwcap: 1 << 1,
+                hwcap2: 1 << 49,
+            },
+        });
+    }
     if let Some(op) = movement(word) {
         return Some(op);
     }

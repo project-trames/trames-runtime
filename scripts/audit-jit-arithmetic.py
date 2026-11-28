@@ -21,7 +21,7 @@ args=parser.parse_args()
 llvm=ctypes.CDLL(args.library)
 for name in ['LLVMInitializeAArch64TargetInfo','LLVMInitializeAArch64TargetMC','LLVMInitializeAArch64Disassembler']:
     getattr(llvm,name)()
-features='+v9.4a,+neon,+fp-armv8,+fullfp16,+fp16fml,+bf16,+i8mm,+complxnum,+rdm,+dotprod,+jsconv,+fptoint,+crypto,+sha3,+sm4'
+features='+v9.4a,+neon,+fp-armv8,+fullfp16,+fp16fml,+bf16,+i8mm,+complxnum,+rdm,+dotprod,+jsconv,+fptoint,+crypto,+sha3,+sm4,+lut'
 llvm.LLVMCreateDisasmCPUFeatures.restype=ctypes.c_void_p
 llvm.LLVMCreateDisasmCPUFeatures.argtypes=[ctypes.c_char_p,ctypes.c_char_p,ctypes.c_char_p,ctypes.c_void_p,ctypes.c_int,ctypes.c_void_p,ctypes.c_void_p]
 context=llvm.LLVMCreateDisasmCPUFeatures(b'aarch64-unknown-linux-gnu',b'generic',features.encode(),None,0,None,None)

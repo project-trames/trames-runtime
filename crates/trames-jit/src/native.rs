@@ -3657,3 +3657,7 @@ mod tests {
 #[cfg(test)]
 #[path = "vector_codegen_tests.rs"]
 mod vector_codegen_tests;
+
+#[cfg(test)]
+#[path = "lut_codegen_tests.rs"]
+mod lut_codegen_tests;
