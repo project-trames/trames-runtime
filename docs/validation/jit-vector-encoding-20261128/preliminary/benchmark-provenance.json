@@ -1,0 +1,57 @@
+{
+  "baseline_runtime": "d251bc26eac982314a6872dcec1ab939c001438e",
+  "rustc": "rustc 1.101.0-nightly (4ebd25825 2026-10-15)\nbinary: rustc\ncommit-hash: 4ebd258257737d5b7635c116fa7d281627a7e937\ncommit-date: 2026-10-15\nhost: aarch64-unknown-linux-gnu\nrelease: 1.101.0-nightly\nLLVM version: 23.1.4\n",
+  "page_size": 4096,
+  "cpu_affinity": 0,
+  "samples": 32,
+  "warmup": 8,
+  "order": [
+    "before",
+    "after",
+    "after",
+    "before",
+    "before",
+    "after",
+    "after",
+    "before"
+  ],
+  "binaries": {
+    "before": {
+      "compatibility-category": {
+        "sha256": "12d5386a5e215d6cd6d92f63c5e467802bde483dbaa66e3570f556394afc8bcc",
+        "source": "/mnt/trames-output/jit-vector-encoding-baseline-source",
+        "target_dir": "/mnt/trames-output/jit-vector-encoding-baseline-target"
+      },
+      "execution-entry": {
+        "sha256": "0f1e61992c441ea249af691a5bbe5c2d172664b9c52422c5ac5ebf4aaa928485",
+        "source": "/mnt/trames-output/jit-vector-encoding-baseline-source",
+        "target_dir": "/mnt/trames-output/jit-vector-encoding-baseline-target"
+      }
+    },
+    "after": {
+      "compatibility-category": {
+        "sha256": "c89671bdaab27d53556eb905db73e30ee51d5fa4fef1068deeb4103b978e36cf",
+        "source": "/mnt/trames-output/jit-vector-encoding-source",
+        "target_dir": "/mnt/trames-output/jit-vector-encoding-linux-target"
+      },
+      "execution-entry": {
+        "sha256": "fb4673af6e9e96f2fa5933b0ea4d84b909f3558dbc13689e505cc68944eb4921",
+        "source": "/mnt/trames-output/jit-vector-encoding-source",
+        "target_dir": "/mnt/trames-output/jit-vector-encoding-linux-target"
+      }
+    }
+  },
+  "harness_sha256": {
+    "compatibility-category": "534e367d4a68222f2516b7454502a3f7f6d1c384edbc744bd5a6ecabb4d1182b",
+    "execution-entry": "2a4bec21fdac2158f4e83542c35063978e202efd62cfeec9ac7d78b19ccebb4d"
+  },
+  "workloads": [
+    "control-integer",
+    "control-scalar-memory",
+    "svc-only",
+    "svc-round-trip",
+    "svc-continuation"
+  ],
+  "hwcap": "0xefb3ffff",
+  "hwcap2": "0x2000100326181"
+}

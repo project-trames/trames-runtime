@@ -94,7 +94,7 @@ fn compare_memory_sequence_mode(
         });
     }
     let mut reference_engine = trames_interpreter::Engine::default();
-    for _ in 0..64 {
+    for _ in 0..128 {
         let x = if parallel {
             expected.run_parallel(&mut reference_engine, va.as_mut().unwrap(), budget)
         } else {
@@ -4270,3 +4270,6 @@ mod execution_boundary_category;
 
 #[path = "support/control_category.rs"]
 mod control_category;
+
+#[path = "support/vector_encoding_category.rs"]
+mod vector_encoding_category;

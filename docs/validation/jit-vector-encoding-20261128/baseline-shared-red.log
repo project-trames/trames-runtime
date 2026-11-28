@@ -1,0 +1,39 @@
+UTC 2026-11-28T11:40:27.449368+00:00
+COMMAND ['cargo', 'test', '--locked', '-p', 'trames-interpreter', 'reserved_vector_families', '--', '--nocapture']
+   Compiling libc v0.2.190
+   Compiling parking_lot_core v0.9.12
+   Compiling cfg-if v1.0.5
+   Compiling scopeguard v1.2.0
+   Compiling smallvec v1.16.3
+   Compiling rustix v1.1.5
+   Compiling lock_api v0.4.14
+   Compiling linux-raw-sys v0.12.1
+   Compiling bitflags v2.13.2
+   Compiling getrandom v0.3.4
+   Compiling trames-execution v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-execution)
+   Compiling trames-host-compute v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-host-compute)
+   Compiling parking_lot v0.12.5
+   Compiling trames-shared v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-shared)
+   Compiling trames-memory v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-memory)
+   Compiling trames-engine v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-engine)
+   Compiling trames-interpreter v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-interpreter)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.82s
+     Running unittests src/lib.rs (/mnt/trames-output/jit-vector-encoding-baseline-target/debug/build/trames-interpreter/d8f1301848ee020a/out/trames_interpreter-d8f1301848ee020a)
+
+running 1 test
+
+thread 'vector_encoding_tests::reserved_vector_families_fault_without_state_changes_in_cached_and_step_paths' (369253) panicked at crates/trames-interpreter/src/vector_encoding_tests.rs:62:13:
+2e22e020/Yield { instructions: 1 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test vector_encoding_tests::reserved_vector_families_fault_without_state_changes_in_cached_and_step_paths ... FAILED
+
+failures:
+
+failures:
+    vector_encoding_tests::reserved_vector_families_fault_without_state_changes_in_cached_and_step_paths
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 52 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p trames-interpreter --lib`
+
+EXIT 101 ELAPSED 7.870678647974273

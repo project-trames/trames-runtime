@@ -1,0 +1,20 @@
+{
+  "codegen": {
+    "identical": true,
+    "programs": 1094,
+    "sha256": "9e8277d119f8dfbca0b387ad117d011ee5dcbc46a35ba5345fc43965f8463593",
+    "layout": "LAYOUT 192 152 264 120"
+  },
+  "control-codegen": {
+    "identical": true,
+    "programs": 2816,
+    "sha256": "27bef106dc7a9873283119e2e1c93c90315f82c0c1095590f8515dbeb4a8bb70",
+    "layout": "LAYOUT 192 152 264 120"
+  },
+  "scalar-codegen": {
+    "identical": true,
+    "programs": 838,
+    "sha256": "87fc9c57b620d0fb5040d5ffc2abbd46dc38d76cc010ba45eb20732895cc284f",
+    "layout": "LAYOUT 192 152 264 120"
+  }
+}

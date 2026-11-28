@@ -116,6 +116,16 @@ Compilation, Linux execution and Android app-UID/device acceptance are distinct.
   branches or new authentication state. See
   [control-category validation](../validation/jit-control-20261128.md).
 
+- Complete fixed-width FP/AdvSIMD primary-group admission and error boundaries:
+  all 524,288 declared selectors across groups 7/15 match independent LLVM 23;
+  74,072 are admitted with zero invalid admissions or valid missing selectors.
+  Shared decoding now rejects three reserved families previously interpreted
+  as PMULL, scalar narrowing shifts or scalar indexed long multiply. Actual
+  ARM64 execution produces SIGILL for all 1,776 corrected words. Untranslated
+  FP/AdvSIMD selectors now use the original direct instruction-fault cache,
+  with cold/warm decoder-entry tracing and complete state/retirement checks.
+  See [vector-encoding validation](../validation/jit-vector-encoding-20261128.md).
+
 LSE128 is exposed only when the process host provides it. LS64 and full hardware
 PAC/BTI/MTE remain unadvertised without their required shared-CPU/memory ownership.
 This does not change the interpreter-only backend's compatibility policy. New
@@ -132,10 +142,11 @@ This is not a claim of every host ISA extension or every future encoding.
    SETG needs allocation-tag ownership. These capabilities remain unadvertised;
    do not substitute software extension state or interpret them as simpler ops.
 2. The generic one-instruction interpreter entry remains for encodings not
-   recognized outside the closed scalar and owned control/exception spaces; it can report an
+   recognized outside the closed scalar, fixed-width FP/AdvSIMD and owned control/exception
+   spaces; it can report an
    instruction fault rather than successfully execute an instruction. Scalar
-   groups 5/8/9/13 and the audited owned control/exception selectors now diagnose
-   those errors directly. This is not full host-ISA
+   groups 5/8/9/13, FP/AdvSIMD groups 7/15 and the audited owned control/exception
+   selectors now diagnose those errors directly. This is not full host-ISA
    coverage, and the selector audit does not enumerate all operand/literal bits.
    Changed execution epochs now retry/yield natively, not through that fallback.
    Abstract ordered/atomic embeddings now retain their own fence/transaction

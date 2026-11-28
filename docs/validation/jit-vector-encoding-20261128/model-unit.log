@@ -1,0 +1,8 @@
+
+running 2 tests
+test vector_ops::encoding_tests::entire_fp_simd_selector_space_has_native_or_original_fault_classification ... All FP/SIMD selectors: admitted 74072, original faults 450216, missing 0
+ok
+test vector_ops::encoding_tests::every_admitted_fp_simd_selector_executes_natively_or_rejects_absent_host_features ... Complete FP/SIMD execution selectors: 74072 native, 0 absent host
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 35 filtered out; finished in 15.91s

@@ -1,0 +1,6 @@
+
+running 2 tests
+test vector_encoding_category::all_sampled_fp_simd_errors_fault_directly_and_revalidate_without_decoder_entry ... ok
+test vector_encoding_category::corrected_vector_errors_preserve_dirty_fp_gpr_flags_memory_prefix_and_retirement ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 133 filtered out; finished in 13.29s

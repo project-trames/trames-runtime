@@ -597,7 +597,10 @@ impl Cache {
                     let operation = crate::memory_ops::Operation::compile(memory, pc)?
                         .map(|op| Box::new(MemoryOps::Single(op)));
                     if operation.is_none() {
-                        if scalar::owns(word) || trames_interpreter::control::owns_encoding(word) {
+                        if scalar::owns(word)
+                            || crate::vector_ops::owns(word)
+                            || trames_interpreter::control::owns_encoding(word)
+                        {
                             Some(Box::new(MemoryOps::Instruction(word)))
                         } else {
                             None
@@ -3650,3 +3653,7 @@ mod tests {
         assert_eq!(cache.links[source.slot], 0);
     }
 }
+
+#[cfg(test)]
+#[path = "vector_codegen_tests.rs"]
+mod vector_codegen_tests;

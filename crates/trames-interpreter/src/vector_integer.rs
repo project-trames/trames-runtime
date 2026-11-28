@@ -401,7 +401,12 @@ impl Cpu {
             }
             let key = normal & 0xbf00f400;
             let plain = matches!(key, 0x0f008000 | 0x2f000000 | 0x2f004000);
-            if scalar && plain {
+            if scalar
+                && !matches!(
+                    key,
+                    0x0f00b000 | 0x0f003000 | 0x0f007000 | 0x0f00c000 | 0x0f00d000
+                )
+            {
                 return Err(invalid());
             }
             let high = matches!(key, 0x0f00c000 | 0x0f00d000);
@@ -542,7 +547,7 @@ impl Cpu {
             let op = (ins >> 12) & 15;
             if op == 15
                 || (size == 3 && op != 14)
-                || (op == 14 && size != 0 && size != 3)
+                || (op == 14 && (unsigned || size != 0 && size != 3))
                 || (matches!(op, 9 | 11 | 13) && (unsigned || size == 0))
             {
                 return Err(invalid());
@@ -770,6 +775,7 @@ impl Cpu {
             if element_bits == 64 && (narrow || !scalar && !upper)
                 || op == 12 && !unsigned
                 || op == 8 && !unsigned
+                || scalar && matches!(op, 16 | 17) && !unsigned
             {
                 return Err(invalid());
             }

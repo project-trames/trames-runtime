@@ -1,0 +1,9 @@
+UTC 2026-11-28T11:40:13.602392+00:00
+COMMAND ['cargo', 'clippy', '--locked', '-p', 'trames-jit', '-p', 'trames-interpreter', '--all-targets', '--', '-D', 'warnings']
+    Checking trames-memory v1.3.0 (/Users/main/dev/trames/target/local-ci/io/jit-vector-encoding-source/crates/trames-memory)
+    Checking trames-engine v1.3.0 (/Users/main/dev/trames/target/local-ci/io/jit-vector-encoding-source/crates/trames-engine)
+    Checking trames-interpreter v1.3.0 (/Users/main/dev/trames/target/local-ci/io/jit-vector-encoding-source/crates/trames-interpreter)
+    Checking trames-jit v1.3.0 (/Users/main/dev/trames/target/local-ci/io/jit-vector-encoding-source/crates/trames-jit)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.42s
+
+EXIT 0 ELAPSED 1.475160083

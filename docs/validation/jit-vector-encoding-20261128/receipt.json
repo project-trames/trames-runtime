@@ -1,0 +1,303 @@
+{
+  "baseline": {
+    "runtime": "d251bc26eac982314a6872dcec1ab939c001438e",
+    "android": "2b74ba3e9152d1947d78d87039e4f265592362b4"
+  },
+  "source_sha256": {
+    "crates/trames-interpreter/src/lib.rs": "6f7059b666c388b6dd2174601505334c52aadfe4a560ecba3912ec7db7ffe475",
+    "crates/trames-interpreter/src/vector_integer.rs": "b2b0d8f3fea0359e78d275b3b0a0695cc9e2dcbed7509ada7cc72ef391633131",
+    "crates/trames-jit/src/native.rs": "6b7e30aa9f2659a749634073cdbca327e7ee628e37921b3a702de9adfe3720c1",
+    "crates/trames-jit/src/vector_ops.rs": "e387f77fa87df19c05c9067bb2261c56410406c2237ba971773a9cc1c45fce22"
+  },
+  "test_source_sha256": {
+    "crates/trames-interpreter/src/vector_encoding_tests.rs": "5d885fded20525602789ae99fe7b98bc9119fafde0716e3d4a3612dae65020ed",
+    "crates/trames-jit/src/vector_encoding_tests.rs": "424e9adb6f3fb2ebfbfa02d488b8b9521937af7fa1c438bea298646a4d6099a4",
+    "crates/trames-jit/src/vector_codegen_tests.rs": "242e90b584a5a369440a30f038d3d5bb5588677378068b91999118201359b273",
+    "crates/trames-jit/tests/differential.rs": "fb374edb9a0291f1212d15906c7a08c311bfd520d957c968da8e6d982873c726",
+    "crates/trames-jit/tests/support/vector_encoding_category.rs": "1d9158aec4bd00f3e9ba5d1284fca7e01888ced0ad2b0c107e89057f8ab5d669"
+  },
+  "scope": {
+    "selectors": 524288,
+    "admitted": 74072,
+    "invalid_admissions": 0,
+    "valid_missing": 0,
+    "baseline_rejected": 448440,
+    "corrected_reserved": 1776,
+    "reference_faults": 450216,
+    "actual_native": 72439,
+    "actual_missing_host": 1633,
+    "actual_sigill_words": 1776,
+    "shared_reserved_programs_each_path": 7104,
+    "shared_allocated_neighbors_each_path": 7104,
+    "traced_fault_words": 8811,
+    "linux_jit_tests_debug_release": 172,
+    "interpreter_tests_each_host": 56,
+    "apple_jit_tests": 130,
+    "android_jit_tests": 8,
+    "android_default_tests": 1,
+    "android_probe_programs": 360
+  },
+  "hardware_validation": {
+    "probe_binary_sha256": "e7c51c8b4aff13aff0279846921dacdf297c6e6037b9e75ec60f009e5f91164e",
+    "result": {
+      "encodings": 1776,
+      "sigill": 1776,
+      "unexpected_success": 0
+    },
+    "process": {
+      "hwcap": "0xefb3ffff",
+      "hwcap2": "0x2000100326181",
+      "page_size": 4096
+    }
+  },
+  "model": {
+    "tool": "QEMU 10.0.13 max",
+    "binary_sha256": "088500814a5a8e0e0ee3cad0f6c600b5dfa261f77cc0e6460f81b0b616e09509",
+    "process": {
+      "hwcap": "0xeffffffb",
+      "hwcap2": "0x18007fc77fff",
+      "page_size": 4096
+    },
+    "test_executables": {
+      "trames_jit": {
+        "path": "/mnt/trames-output/jit-vector-encoding-linux-target/debug/build/trames-jit/24b6517ab8a40b53/out/trames_jit-24b6517ab8a40b53",
+        "sha256": "fa98d7606f7a2d7b4246272085ba8e311ccd4e91383ac0d405885e996276194b"
+      },
+      "differential": {
+        "path": "/mnt/trames-output/jit-vector-encoding-linux-target/debug/build/trames-jit/2ae1ad06ea568dd4/out/differential-2ae1ad06ea568dd4",
+        "sha256": "bd590dfa17dfbb608fb1269851b959006054197ef1f873f0e5b500617b2d8a40"
+      },
+      "trames_android_core": {
+        "path": "/mnt/trames-output/jit-vector-encoding-linux-target/debug/build/trames-android-core/d9508bc8ef4a68e3/out/trames_android_core-d9508bc8ef4a68e3",
+        "sha256": "6daf1506f009e8970eb5dc6302ee64c3b426b38af18f013e12785ca3cde22e0d"
+      }
+    },
+    "native_selectors": 74072,
+    "missing_host_selectors": 0,
+    "acceptance": "positive declared FP/AdvSIMD selector matrix in ISA model; not physical optional-extension hardware or Android app-UID/ART/device throughput"
+  },
+  "generated_code": {
+    "codegen": {
+      "identical": true,
+      "programs": 1094,
+      "sha256": "9e8277d119f8dfbca0b387ad117d011ee5dcbc46a35ba5345fc43965f8463593",
+      "layout": "LAYOUT 192 152 264 120"
+    },
+    "control-codegen": {
+      "identical": true,
+      "programs": 2816,
+      "sha256": "27bef106dc7a9873283119e2e1c93c90315f82c0c1095590f8515dbeb4a8bb70",
+      "layout": "LAYOUT 192 152 264 120"
+    },
+    "scalar-codegen": {
+      "identical": true,
+      "programs": 838,
+      "sha256": "87fc9c57b620d0fb5040d5ffc2abbd46dc38d76cc010ba45eb20732895cc284f",
+      "layout": "LAYOUT 192 152 264 120"
+    }
+  },
+  "original_log_sha256": {
+    "linux-debug.log": "d090d135fa58bef71444f84c490b8aef20fc35f805a8150b1fe8cde1d64fb3fd",
+    "linux-release.log": "23148ad52495704c80cfecaf788d64a2d01b4433f4557acbaf62f12bb7831a45",
+    "interpreter-linux.log": "750a159268cc7e2fe36f84bed324d6d1e69f21f83f9c054ea60c512e439a5ef3",
+    "clippy-linux.log": "318d7e36536981b7d67b8b7924d5cd7a21372dfdb06e8c811358e6d6103e2c69",
+    "clippy-amd64.log": "3e3026e7b0e810691df4e8195d63b0046942fd705ee7efee5777f87b1794eef3",
+    "apple-jit.log": "1d30f984144f1e65a102a1c6f2ee24d45d60bd054c101f3c79b3f81a3759c7e9",
+    "interpreter-apple.log": "f69c53b09d6faf9e9092a7733bb8e8eacad93aa80dc89e5845c7e25132d8cfb5",
+    "clippy-apple.log": "b344bd81dd968a3626a180e525de87f307ca9f26884c82700167078baa4a3253",
+    "default-clippy-apple.log": "7c41be91e38cdf2ab2618ce01d9601b5afc50173007431d7c515de0a99aba65f",
+    "ios.log": "d196fd3e87c4a86811ac0c0c76962cdd8e2dc6cc62a7c4b9c4f85f64896ddf94",
+    "android-linux.log": "7ea59241e7dd291b5094b5c6aa1c468d2eb30128eb1316facaf9e0d2d4fd4980",
+    "android-linux-default.log": "f3d0a9be678c42dddf9c8de1c8a51efa96ddb288289a01709b369875c06e724c",
+    "android-linux-clippy.log": "bd89aab7956c64c6c28d57d4a8d35b36d57bac12f04adb656fd2c459c3975e46",
+    "android-apple.log": "2882337da75adffbb22bfbd0ef6070add810fd2ee99bf2cbe6ec92568b6930c2",
+    "android-apple-default.log": "57788debf0708765fe41b73536c938b00c462e3a4107ccd14520324bdd9bd0bf",
+    "android-apple-clippy.log": "aa51847c976f3fd2f7533287d19d2036aec70dc32da8278a8a23bbe480fefb91",
+    "baseline-shared-red.log": "0886662334aa9c670cc7734a138599527c826764eda3e4ca05c11fc756206e0d",
+    "baseline-entry-red.log": "138996124ecab07b59c0908a340efd98d9893f99854dea82bbc4b4135c0b91ea",
+    "before-codegen.log": "e99a8c2ad5b520dd5cf25d7ba63f29b3f3f6ce5a827fef2725ac8c2ff7b7c638",
+    "after-codegen.log": "e8f756fd2e03da59b04a21bf8a53087eb9b249284b2824d42f63142d045f1366",
+    "model-unit.log": "870d4d14224265077b511120f7af223d464b1ccb642683ebbcb92202a8f53e58",
+    "model-integration.log": "36207bf496a491fadd68325c2ab314360092f0238fb748d77fcbe0cefd75e222",
+    "model-android.log": "469c600110bbdd05bef3ad8b78f6693c123ac2e2749605a13651f5a74a7c6cd0"
+  },
+  "log_encoding": "Retained logs normalize final empty lines only; original byte hashes above identify captured outputs. No test output lines removed.",
+  "benchmarks": {
+    "control-integer": {
+      "speed_ratio": 0.9253588885146116,
+      "pair_ratios": [
+        1.0467432255667786,
+        0.9720740512130074,
+        0.8575741979207959,
+        0.8402907618216595
+      ]
+    },
+    "control-scalar-memory": {
+      "speed_ratio": 1.0006166994650676,
+      "pair_ratios": [
+        0.992841037452081,
+        1.0157298477213037,
+        0.996518470081743,
+        0.9975339827064826
+      ]
+    },
+    "svc-only": {
+      "speed_ratio": 1.002126122824096,
+      "pair_ratios": [
+        1.001371025657766,
+        1.0022504277270843,
+        1.0002691383527547,
+        1.0046190100761687
+      ]
+    },
+    "svc-round-trip": {
+      "speed_ratio": 1.2836024071688703,
+      "pair_ratios": [
+        0.9916586856671648,
+        0.9990455706202281,
+        2.7603662027743927,
+        0.992676798404215
+      ]
+    },
+    "svc-continuation": {
+      "speed_ratio": 1.000691611285028,
+      "pair_ratios": [
+        0.9941070432628739,
+        1.0241536638979198,
+        0.9895387003952243,
+        0.9953366110586841
+      ]
+    }
+  },
+  "benchmark_note": "Longer cohort reuses identical binary/harness hashes after short integer variance and ADD+SVC outlier. All preliminary and longer rows retained; no ordinary-path speedup/regression guarantee.",
+  "artifacts_sha256": {
+    "admitted.words.gz": "f54f4506b346da72c8a92c908cc76c89cdda2c8c8bc922c755c2ded00c296e03",
+    "after-codegen.log": "e8f756fd2e03da59b04a21bf8a53087eb9b249284b2824d42f63142d045f1366",
+    "android-apple-clippy.log": "aa51847c976f3fd2f7533287d19d2036aec70dc32da8278a8a23bbe480fefb91",
+    "android-apple-default.log": "57788debf0708765fe41b73536c938b00c462e3a4107ccd14520324bdd9bd0bf",
+    "android-apple.log": "2882337da75adffbb22bfbd0ef6070add810fd2ee99bf2cbe6ec92568b6930c2",
+    "android-linux-clippy.log": "bd89aab7956c64c6c28d57d4a8d35b36d57bac12f04adb656fd2c459c3975e46",
+    "android-linux-default.log": "f3d0a9be678c42dddf9c8de1c8a51efa96ddb288289a01709b369875c06e724c",
+    "android-linux.log": "7ea59241e7dd291b5094b5c6aa1c468d2eb30128eb1316facaf9e0d2d4fd4980",
+    "apple-jit.log": "1d30f984144f1e65a102a1c6f2ee24d45d60bd054c101f3c79b3f81a3759c7e9",
+    "baseline-entry-red.log": "138996124ecab07b59c0908a340efd98d9893f99854dea82bbc4b4135c0b91ea",
+    "baseline-shared-red.log": "0886662334aa9c670cc7734a138599527c826764eda3e4ca05c11fc756206e0d",
+    "before-codegen.log": "e99a8c2ad5b520dd5cf25d7ba63f29b3f3f6ce5a827fef2725ac8c2ff7b7c638",
+    "benchmark-provenance.json": "9c69dc0daa2807f74490e87625578169a48827df48eee9a3188ded170f6c3b52",
+    "benchmark-runner.py": "a6b86b8d55b63ff94a4611466ed235650b234231b5d6a35194164238f18ea414",
+    "benchmark-samples.jsonl": "2721abc1eca83427af4161bf7f264d9713ed83f8463ef6a6f3fffddaee39ad95",
+    "benchmark-summary.json": "2010f47a0d651a56f11e2e967aff45c1c42ba779de4e8cefd0b90c1ce0b2fe79",
+    "clippy-amd64.log": "3e3026e7b0e810691df4e8195d63b0046942fd705ee7efee5777f87b1794eef3",
+    "clippy-apple.log": "b344bd81dd968a3626a180e525de87f307ca9f26884c82700167078baa4a3253",
+    "clippy-linux.log": "318d7e36536981b7d67b8b7924d5cd7a21372dfdb06e8c811358e6d6103e2c69",
+    "codegen-comparison.json": "b1f488ac5cdf9466119a4b1a7a825abfa9e2676fb969850f38ad1f0e59fb7e02",
+    "codegen.txt.gz": "d2bc91dd341482fa1148babbe6022652b3b9d6c746a3b2f0e1e5ab3c176e6322",
+    "control-codegen.txt.gz": "c48bb906eee2cdd6e38aa85e5ff511db997aa624f867cad6c88decbc4f54b28e",
+    "default-clippy-apple.log": "7c41be91e38cdf2ab2618ce01d9601b5afc50173007431d7c515de0a99aba65f",
+    "encoding-audit.json": "fd11e7f3fb6e8ca3b358b4ad0f94051ade6fb53169bdc1e7d06cb51353ff3b74",
+    "hardware-invalid.json": "b3bc501e5a1c89b923b6a1aa1722764e6343bec4cc698825fa8866b3b588fe76",
+    "host-caps.json": "1e3d3dba1c4b12b0b09674da7840ce9feda394d452fe2d0ee4910adc34b7f3c7",
+    "interpreter-apple.log": "f69c53b09d6faf9e9092a7733bb8e8eacad93aa80dc89e5845c7e25132d8cfb5",
+    "interpreter-linux.log": "750a159268cc7e2fe36f84bed324d6d1e69f21f83f9c054ea60c512e439a5ef3",
+    "invalid-probe.c": "87655769f5e6046d048bb34cd66b6e59f260d420272209834c08c8ea636cbe01",
+    "ios.log": "d196fd3e87c4a86811ac0c0c76962cdd8e2dc6cc62a7c4b9c4f85f64896ddf94",
+    "ipad-cpu-tree.txt": "6c3ca7ef47c6485b6fe3e4369074daf2d85bdee34cf982debbf0a42adc56885e",
+    "ipad-isolation-provenance.json": "365bacce8a0459ef7071e0f26547ff4fece44924e7c2d8bfb118df6f543422a9",
+    "linux-debug.log": "d090d135fa58bef71444f84c490b8aef20fc35f805a8150b1fe8cde1d64fb3fd",
+    "linux-release.log": "23148ad52495704c80cfecaf788d64a2d01b4433f4557acbaf62f12bb7831a45",
+    "model-android.log": "95282a8feb395771d7f3447463e16920eb5f4004b39e9dd1c86ec8a172dc3d0b",
+    "model-caps.json": "e2639957b3d04ca816a7d1fd87bd5dd6d92bab365c40a137fc7e76c582b1d96f",
+    "model-integration.log": "c1a7069da9073d2c2733bff6e12cbece3743e2ee58d8db5d2201776067ac757b",
+    "model-unit.log": "d313e6b28becb6b270b87c5b1858607ceab1d8f96d4ed419ac3255f045a70ff9",
+    "preliminary/benchmark-provenance.json": "c83b4422949b44eb23d43c3fb6db014434462d83c96603c5283204b79d41df26",
+    "preliminary/benchmark-runner.py": "26e539743c924bd0c951a247eb8a8bbd484e80d4e369083780e1d6ddd1d2558a",
+    "preliminary/benchmark-samples.jsonl": "d415602b0b362abf957cc0d4bf145e45b9f618471978325ad0b1ca1f59a4f5e3",
+    "preliminary/benchmark-summary.json": "677b95972814d0cb64a26656fa33b602af7f190238ff85befce286c5038a420f",
+    "reference-corrections.words": "00ad7bd15f53b75228f2a2e3cc33e65ef9518dbca0fe78688c5878df3195e1bb",
+    "rejected.words": "e980dd9e349dcd556578f179696534feaf86e99323dac7a2479e8559c982287a",
+    "repeated-process-runner.py": "7b5573db11261e5c06f54a6babad0815749a573098ea07549da387ec3d391cad",
+    "repeated-process-samples.jsonl": "c6c20f338d713f00165c30252aeaac8b00073e1dac688c4cd1748df960c65574",
+    "repeated-process-summary.json": "a4ad8455b411fc343bbbf4ddc2ab46eb23afb3b2d2bc3b00f58c6e564f8b6d4b",
+    "scalar-codegen.txt.gz": "0d635b8c2fe64d2e67f876428ee4c2113cdb47e413b29ea2e9cd37320a1aade2"
+  },
+  "repeated_process_diagnostic": {
+    "control-integer": {
+      "before": {
+        "median_ns": [
+          2607907.5,
+          2436520.5,
+          2366254.5,
+          2598091.0,
+          3307904.0,
+          2600989.0,
+          2378108.5,
+          2481754.5,
+          2373874.0,
+          2580488.0,
+          2753530.0,
+          2541714.5
+        ],
+        "same_binary_range_ratio": 1.3979493752679604,
+        "geomean_ns": 2575152.802127589
+      },
+      "after": {
+        "median_ns": [
+          2440816.5,
+          2400936.0,
+          2423088.0,
+          2382023.5,
+          2377250.5,
+          2428253.0,
+          2408585.5,
+          2396712.5,
+          2394650.0,
+          2394772.5,
+          2435376.5,
+          2380817.5
+        ],
+        "same_binary_range_ratio": 1.0267392939868978,
+        "geomean_ns": 2405182.4699324137
+      },
+      "before_current_geomean_time_ratio": 1.070668373115139
+    },
+    "svc-round-trip": {
+      "before": {
+        "median_ns": [
+          963859.5,
+          969985.0,
+          968005.5,
+          964089.0,
+          973859.5,
+          972276.5,
+          994214.5,
+          978422.0,
+          976276.0,
+          985297.5,
+          994172.5,
+          983193.0
+        ],
+        "same_binary_range_ratio": 1.0314931792444852,
+        "geomean_ns": 976919.7389731081
+      },
+      "after": {
+        "median_ns": [
+          964046.5,
+          972776.5,
+          966526.0,
+          964526.5,
+          971818.0,
+          1003089.5,
+          988423.0,
+          984484.5,
+          976755.0,
+          977963.5,
+          981984.5,
+          991464.5
+        ],
+        "same_binary_range_ratio": 1.040499083809754,
+        "geomean_ns": 978589.2330774425
+      },
+      "before_current_geomean_time_ratio": 0.9982939786706173
+    }
+  }
+}

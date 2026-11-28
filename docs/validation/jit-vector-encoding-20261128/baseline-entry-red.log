@@ -1,0 +1,32 @@
+UTC 2026-11-28T11:40:35.553151+00:00
+COMMAND ['cargo', 'test', '--locked', '-p', 'trames-jit', '--features', 'native-aarch64', 'all_sampled_fp_simd_errors_fault_directly', '--', '--nocapture']
+   Compiling trames-memory v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-memory)
+   Compiling trames-engine v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-engine)
+   Compiling trames-interpreter v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-interpreter)
+   Compiling trames-jit v1.3.0 (/mnt/trames-output/jit-vector-encoding-baseline-source/crates/trames-jit)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.44s
+     Running unittests src/lib.rs (/mnt/trames-output/jit-vector-encoding-baseline-target/debug/build/trames-jit/24b6517ab8a40b53/out/trames_jit-24b6517ab8a40b53)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 35 filtered out; finished in 0.00s
+
+     Running tests/differential.rs (/mnt/trames-output/jit-vector-encoding-baseline-target/debug/build/trames-jit/2ae1ad06ea568dd4/out/differential-2ae1ad06ea568dd4)
+
+running 1 test
+
+thread 'vector_encoding_category::all_sampled_fp_simd_errors_fault_directly_and_revalidate_without_decoder_entry' (369384) panicked at crates/trames-jit/tests/support/vector_encoding_category.rs:70:9:
+extra decoder page query: interpreter fault entry
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test vector_encoding_category::all_sampled_fp_simd_errors_fault_directly_and_revalidate_without_decoder_entry ... FAILED
+
+failures:
+
+failures:
+    vector_encoding_category::all_sampled_fp_simd_errors_fault_directly_and_revalidate_without_decoder_entry
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p trames-jit --test differential`
+
+EXIT 101 ELAPSED 8.483589518000372

@@ -43,6 +43,10 @@ impl Operation {
 }
 #[path = "arithmetic_ops.rs"]
 mod arithmetic;
+/// The complete fixed-width FP/AdvSIMD primary groups; no new feature ownership.
+pub(super) fn owns(word: u32) -> bool {
+    matches!((word >> 25) & 15, 7 | 15)
+}
 pub(super) fn decode(word: u32) -> Option<Operation> {
     use Form::*;
     if let Some(op) = movement(word) {
@@ -473,3 +477,7 @@ mod arithmetic_audit {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "vector_encoding_tests.rs"]
+mod encoding_tests;

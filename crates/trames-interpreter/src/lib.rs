@@ -1120,3 +1120,6 @@ impl trames_engine::Cpu for Cpu {
 mod control_tests;
 #[cfg(test)]
 mod scalar_ignored_tests;
+
+#[cfg(test)]
+mod vector_encoding_tests;
